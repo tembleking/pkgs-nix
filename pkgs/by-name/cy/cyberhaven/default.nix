@@ -33,7 +33,10 @@ buildFHSEnv {
     exec ${cyberhaven-unwrapped}/opt/cyberhaven/cyberhaven "$@"
   '';
 
-  passthru.unwrapped = cyberhaven-unwrapped;
+  passthru = {
+    unwrapped = cyberhaven-unwrapped;
+    skipAutoUpdate = true;
+  };
 
   meta = {
     mainProgram = "cyberhaven";

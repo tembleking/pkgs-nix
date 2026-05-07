@@ -53,7 +53,10 @@ buildFHSEnv {
     exec /opt/carbonblack/psc/bin/cbagentd "$@"
   '';
 
-  passthru.unwrapped = cbagentd-unwrapped;
+  passthru = {
+    unwrapped = cbagentd-unwrapped;
+    skipAutoUpdate = true;
+  };
 
   meta = {
     mainProgram = "cbagentd";

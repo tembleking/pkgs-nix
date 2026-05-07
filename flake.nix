@@ -2,14 +2,12 @@
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
     flake-utils.url = "github:numtide/flake-utils";
-    poetry2nix.url = "github:nix-community/poetry2nix";
   };
   outputs =
     {
       self,
       nixpkgs,
       flake-utils,
-      poetry2nix,
     }:
     let
       discoverPackages =
@@ -36,21 +34,16 @@
         let
           pkgs = import nixpkgs {
             inherit system;
-            config.allowUnfree = true;
+            config = {
+              allowUnfree = true;
+              permittedInsecurePackages = [ "python3.13-pypdf2-3.0.1" ];
+            };
             overlays = [ self.overlays.default ];
           };
 
-          # demisto-sdk needs poetry2nix, which requires a pinned nixpkgs
-          pkgs-poetry2nix = import poetry2nix.inputs.nixpkgs {
-            inherit system;
-            config.allowUnfree = true;
-            overlays = [ poetry2nix.overlays.default ];
-          };
         in
         {
-          packages = discoverPackages pkgs.callPackage // {
-            demisto-sdk = pkgs-poetry2nix.callPackage ./pkgs/by-name/de/demisto-sdk { };
-          };
+          packages = discoverPackages pkgs.callPackage;
           formatter = pkgs.nixfmt-tree;
         }
       );

@@ -1,62 +1,120 @@
 {
+  python3Packages,
+  fetchPypi,
   lib,
-  runCommand,
-  fetchFromGitHub,
-  poetry2nix,
-  pypkgs-build-requirements ? {
-    dictor = [ "setuptools" ];
-  },
 }:
 let
-  version = "1.38.24";
+  demisto-py = python3Packages.buildPythonPackage rec {
+    pname = "demisto-py";
+    version = "3.2.22";
+    format = "wheel";
+    src = fetchPypi {
+      pname = "demisto_py";
+      inherit version;
+      format = "wheel";
+      dist = "py3";
+      python = "py3";
+      hash = "sha256-1GUD7tgIp/sATR6fc/diNPlONs4aBT5LVhNn6iK0PT0=";
+    };
+    pythonRelaxDeps = true;
+    dependencies = with python3Packages; [
+      certifi
+      six
+      python-dateutil
+      urllib3
+      tzlocal
+      setuptools
+    ];
+  };
+in
+python3Packages.buildPythonApplication rec {
+  pname = "demisto-sdk";
+  version = "1.38.25";
+  format = "wheel";
 
-  src = fetchFromGitHub {
-    owner = "demisto";
-    repo = "demisto-sdk";
-    rev = "bb4164a06bec3cbec01f458d6c95aff7cb4cb4b3";
-    hash = "sha256-KEGl5BUb0sZaxGWhKmu/QGe1LcZcbSQaPNEVaLjt/ao=";
+  src = fetchPypi {
+    pname = "demisto_sdk";
+    inherit version;
+    format = "wheel";
+    dist = "py3";
+    python = "py3";
+    hash = "sha256-DbwwauALOTD/PKOa8pjf2oKUey409Oh2r3caWbdzBWI=";
   };
 
-  patchedLock = runCommand "patched-poetry-lock" { } ''
-    sed '/ios_13_0/d' ${src}/poetry.lock > $out
-  '';
+  pythonRelaxDeps = true;
 
-  overrides = poetry2nix.defaultPoetryOverrides.extend (
-    self: super:
-    (builtins.mapAttrs (
-      package: build-requirements:
-      (builtins.getAttr package super).overridePythonAttrs (old: {
-        buildInputs =
-          (old.buildInputs or [ ])
-          ++ (builtins.map (
-            pkg: if builtins.isString pkg then builtins.getAttr pkg super else pkg
-          ) build-requirements);
-      })
-    ) pypkgs-build-requirements)
-    // {
-      bcrypt = super.bcrypt.overridePythonAttrs (old: {
-        nativeBuildInputs = builtins.filter (
-          drv:
-          !(builtins.elem (drv.name or "") [
-            "cargo-setup-hook.sh"
-            "cargoSetupHook"
-          ])
-        ) (old.nativeBuildInputs or [ ]);
-        cargoDeps = null;
-      });
-    }
-  );
-in
-poetry2nix.mkPoetryApplication {
-  projectDir = src;
-  poetrylock = patchedLock;
-  inherit overrides;
-  preferWheels = true;
-  checkGroups = [ ];
-  extras = [ ];
-  pythonRelaxDeps = [ "setuptools" ];
+  dependencies = with python3Packages; [
+    autopep8
+    bandit
+    beautifulsoup4
+    chardet
+    coloredlogs
+    configparser
+    coverage
+    dateparser
+    decorator
+    demisto-py
+    dictdiffer
+    docker
+    flatten-dict
+    gitpython
+    giturlparse
+    google-cloud-secret-manager
+    google-cloud-storage
+    imagesize
+    inflection
+    importlib-resources
+    jira
+    junitparser
+    json5
+    jsonschema
+    loguru
+    lxml
+    mergedeep
+    more-itertools
+    mypy
+    neo4j
+    networkx
+    nltk
+    orjson
+    ordered-set
+    packaging
+    paramiko
+    pebble
+    prettytable
+    pydantic_1
+    pygithub
+    pykwalify
+    pylint
+    pypdf2
+    pytest
+    pyspellchecker
+    python-dateutil
+    python-dotenv
+    python-gitlab
+    requests
+    ruamel-yaml
+    setuptools
+    slack-sdk
+    tabulate
+    tenacity
+    toml
+    typer
+    typing-extensions
+    ujson
+    urllib3
+    vulture
+    wcmatch
+    werkzeug
+    yamlordereddictloader
+  ];
+
+  dontCheckRuntimeDeps = true;
+
   meta = {
-    mainProgram = "demisto-sdk";
+    description = "Demisto SDK for building XSOAR content";
+    homepage = "https://github.com/demisto/demisto-sdk";
     license = lib.licenses.mit;
+    mainProgram = "demisto-sdk";
   };
 }
