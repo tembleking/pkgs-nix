@@ -3,30 +3,6 @@
   fetchPypi,
   lib,
 }:
-let
-  demisto-py = python3Packages.buildPythonPackage rec {
-    pname = "demisto-py";
-    version = "3.2.22";
-    format = "wheel";
-    src = fetchPypi {
-      pname = "demisto_py";
-      inherit version;
-      format = "wheel";
-      dist = "py3";
-      python = "py3";
-      hash = "sha256-1GUD7tgIp/sATR6fc/diNPlONs4aBT5LVhNn6iK0PT0=";
-    };
-    pythonRelaxDeps = true;
-    dependencies = with python3Packages; [
-      certifi
-      six
-      python-dateutil
-      urllib3
-      tzlocal
-      setuptools
-    ];
-  };
-in
 python3Packages.buildPythonApplication rec {
   pname = "demisto-sdk";
   version = "1.38.25";

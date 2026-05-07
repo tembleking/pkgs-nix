@@ -27,7 +27,25 @@
         in
         builtins.listToAttrs (builtins.concatMap packagesFromPrefix prefixes);
 
-      overlays.default = final: prev: discoverPackages final.callPackage;
+      discoverPythonModules =
+        let
+          modulesDir = ./pkgs/python-modules;
+          moduleNames = builtins.attrNames (builtins.readDir modulesDir);
+        in
+        pyfinal: pyprev:
+        builtins.listToAttrs (
+          map (name: {
+            inherit name;
+            value = pyprev.callPackage (modulesDir + "/${name}") { };
+          }) moduleNames
+        );
+
+      overlays.default =
+        final: prev:
+        discoverPackages final.callPackage
+        // {
+          pythonPackagesExtensions = prev.pythonPackagesExtensions ++ [ discoverPythonModules ];
+        };
 
       flake = flake-utils.lib.eachDefaultSystem (
         system:
