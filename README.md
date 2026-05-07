@@ -33,4 +33,4 @@ Packages and modules are auto-discovered. No flake.nix changes needed.
 
 ### Auto-update
 
-Add an `update.sh` to your package directory and set `passthru.updateScript = ./update.sh;`. The daily CI workflow runs all discovered update scripts automatically.
+Set `passthru.updateScript` in your package. The daily CI workflow runs all discovered update scripts automatically.

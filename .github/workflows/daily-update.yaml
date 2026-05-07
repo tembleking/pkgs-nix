@@ -18,10 +18,10 @@ jobs:
 
     - name: Run update scripts
       run: |
-        for script in $(find pkgs/by-name -name "update.sh" -type f); do
-          echo ">>> Running $script"
-          chmod +x "$script"
-          "$script"
+        for pkg in $(nix eval .#packages.x86_64-linux --apply 'ps: builtins.attrNames ps' --json | jq -r '.[]'); do
+          script=$(nix eval --raw ".#packages.x86_64-linux.$pkg.updateScript" 2>/dev/null) || continue
+          echo ">>> Updating $pkg"
+          eval "$script"
         done
 
     - name: Check for changes
@@ -40,4 +40,4 @@ jobs:
         git config user.email github-actions@github.com
         git add -A
         git commit -m "Update packages"
-        git push origin master
+        git push origin main

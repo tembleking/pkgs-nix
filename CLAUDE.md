@@ -37,7 +37,7 @@ New files must be `git add`ed before Nix can see them (flakes only read tracked 
 
 ### Auto-update
 
-Packages with `update.sh` in their directory set `passthru.updateScript = ./update.sh`. The GH Actions workflow (`.github/workflows/daily-update.yaml`) discovers and runs all `update.sh` files via `find`.
+Packages with `passthru.updateScript` are auto-updated by the daily GH Actions workflow (`.github/workflows/daily-update.yaml`), which discovers update scripts via `nix eval` on each package's `updateScript` attribute.
 
 ## Adding a package
 
