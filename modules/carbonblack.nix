@@ -1,4 +1,3 @@
-{ carbonblack }:
 {
   config,
   lib,
@@ -6,13 +5,13 @@
   ...
 }:
 let
-  inherit (lib) mkEnableOption mkOption mkIf;
   cfg = config.services.cbagentd;
 in
 {
   options.services.cbagentd = {
-    enable = mkEnableOption "cbagentd";
-    code = mkOption {
+    enable = lib.mkEnableOption "cbagentd";
+    package = lib.mkPackageOption pkgs "carbonblack" { };
+    code = lib.mkOption {
       type = lib.types.str;
       description = ''
         The company code needed for carbon black operation.
@@ -20,7 +19,7 @@ in
     };
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     systemd.services.cbagentd = {
       description = "Carbon Black Predictive Security Cloud Endpoint Agent.";
       after = [ "network.target" ];
@@ -28,10 +27,10 @@ in
 
       serviceConfig = {
         Environment = [
-          "OPENSSL_CONF=${carbonblack.unwrapped}/var/opt/carbonblack/psc/ssl/openssl.cnf"
-          "OPENSSL_MODULES=${carbonblack.unwrapped}/opt/carbonblack/psc/lib"
+          "OPENSSL_CONF=${cfg.package.unwrapped}/var/opt/carbonblack/psc/ssl/openssl.cnf"
+          "OPENSSL_MODULES=${cfg.package.unwrapped}/opt/carbonblack/psc/lib"
         ];
-        ExecStart = "${carbonblack}/bin/cbagentd ${cfg.code} --foreground --stdout";
+        ExecStart = "${cfg.package}/bin/cbagentd ${cfg.code} --foreground --stdout";
         KillMode = "process";
         Type = "simple";
         Restart = "on-failure";

@@ -27,9 +27,7 @@ New files must be `git add`ed before Nix can see them (flakes only read tracked 
 
 ### Module auto-discovery
 
-`modules/default.nix` scans for `.nix` files (excluding itself). Each module can be either:
-- **Plain NixOS module** (`{ config, lib, pkgs, ... }:`): imported directly.
-- **Curried module** (`{ somePackage }:` then `{ config, lib, pkgs, ... }:`): first arg names are resolved from `pkgs` via `builtins.functionArgs`, then called. Arg names must match overlay package names.
+`modules/default.nix` scans for `.nix` files (excluding itself) and imports them. Modules are plain NixOS modules (`{ config, lib, pkgs, ... }:`) following the nixpkgs `mkPackageOption` pattern: each module exposes a `package` option defaulting to the overlay package, and uses `cfg.package` in config. The overlay must be applied for defaults to resolve.
 
 ### FHS-wrapped packages pattern
 
@@ -45,5 +43,5 @@ Packages with `update.sh` in their directory set `passthru.updateScript = ./upda
 
 1. `mkdir -p pkgs/by-name/<prefix>/<name>/`
 2. Write `default.nix` (receives nixpkgs args via `callPackage`)
-3. Optionally add `modules/<name>.nix` (curried or plain)
+3. Optionally add `modules/<name>.nix` (plain NixOS module with `mkPackageOption`)
 4. `git add` the new files
