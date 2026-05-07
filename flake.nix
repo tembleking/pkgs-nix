@@ -29,7 +29,7 @@
 
       discoverPythonModules =
         let
-          modulesDir = ./pkgs/python-modules;
+          modulesDir = ./pkgs/development/python-modules;
           moduleNames = builtins.attrNames (builtins.readDir modulesDir);
         in
         pyfinal: pyprev:
