@@ -36,7 +36,7 @@
         builtins.listToAttrs (
           map (name: {
             inherit name;
-            value = pyprev.callPackage (modulesDir + "/${name}") { };
+            value = pyfinal.callPackage (modulesDir + "/${name}") { };
           }) moduleNames
         );
 
