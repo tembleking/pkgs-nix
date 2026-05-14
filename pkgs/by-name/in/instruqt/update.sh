@@ -4,8 +4,8 @@
 set -euo pipefail
 
 LATEST_VERSION=$(curl -s https://api.github.com/repos/instruqt/cli/releases/latest | jq -r .tag_name)
-SCRIPT_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &>/dev/null && pwd)
-VERSIONS_FILE="${SCRIPT_DIR}/versions.nix"
+REPO_ROOT=$(git rev-parse --show-toplevel)
+VERSIONS_FILE="${REPO_ROOT}/pkgs/by-name/in/instruqt/versions.nix"
 SUPPORTED_COMBINATIONS=(
   "x86_64-linux"
   "x86_64-darwin"

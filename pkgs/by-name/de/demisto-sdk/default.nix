@@ -89,7 +89,7 @@ python3Packages.buildPythonApplication rec {
   dontCheckRuntimeDeps = true;
 
   passthru.updateScript = nix-update-script {
-    extraArgs = [ "--url" "https://github.com/demisto/demisto-sdk" ];
+    extraArgs = [ "--flake" "--url" "https://github.com/demisto/demisto-sdk" ];
   };
 
   meta = {

@@ -2,6 +2,7 @@
   python3Packages,
   fetchPypi,
   lib,
+  nix-update-script,
 }:
 python3Packages.buildPythonApplication {
   pname = "yt-dlp-transcripts";
@@ -21,6 +22,10 @@ python3Packages.buildPythonApplication {
     youtube-transcript-api
     click
   ];
+
+  passthru.updateScript = nix-update-script {
+    extraArgs = [ "--flake" ];
+  };
 
   meta = {
     description = "Extract video info and transcripts from YouTube";
