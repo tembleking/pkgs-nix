@@ -6,6 +6,11 @@ update:
     flake_store=$(nix flake metadata --json | jq -r '.path')
 
     for pkg in $(nix eval .#packages.x86_64-linux --apply 'ps: builtins.attrNames ps' --json | jq -r '.[]'); do
+        if nix eval ".#packages.x86_64-linux.$pkg.skipAutoUpdate" 2>/dev/null | grep -q "true"; then
+            echo ">>> Skipping $pkg (skipAutoUpdate)"
+            continue
+        fi
+
         if script_json=$(nix eval --json ".#packages.x86_64-linux.$pkg.updateScript" 2>/dev/null); then
             echo ">>> Updating $pkg (updateScript)"
 

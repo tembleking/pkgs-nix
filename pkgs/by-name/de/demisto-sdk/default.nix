@@ -2,10 +2,11 @@
   python3Packages,
   fetchPypi,
   lib,
+  nix-update-script,
 }:
 python3Packages.buildPythonApplication rec {
   pname = "demisto-sdk";
-  version = "1.38.25";
+  version = "1.39.0";
   format = "wheel";
 
   src = fetchPypi {
@@ -14,7 +15,7 @@ python3Packages.buildPythonApplication rec {
     format = "wheel";
     dist = "py3";
     python = "py3";
-    hash = "sha256-DbwwauALOTD/PKOa8pjf2oKUey409Oh2r3caWbdzBWI=";
+    hash = "sha256-JqZdVV4BFJ38yko02XQN8oxi/Y/SXifwzq7cbAVCzpk=";
   };
 
   pythonRelaxDeps = true;
@@ -86,6 +87,10 @@ python3Packages.buildPythonApplication rec {
   ];
 
   dontCheckRuntimeDeps = true;
+
+  passthru.updateScript = nix-update-script {
+    extraArgs = [ "--url" "https://github.com/demisto/demisto-sdk" ];
+  };
 
   meta = {
     description = "Demisto SDK for building XSOAR content";
