@@ -6,7 +6,7 @@
 }:
 python3Packages.buildPythonApplication rec {
   pname = "demisto-sdk";
-  version = "1.39.2";
+  version = "1.39.3";
   format = "wheel";
 
   src = fetchPypi {
@@ -15,7 +15,7 @@ python3Packages.buildPythonApplication rec {
     format = "wheel";
     dist = "py3";
     python = "py3";
-    hash = "sha256-Pbwz33flhUkRw39O9AUG2zoJMpZ5Ln4YWdGcQ65EcvU=";
+    hash = "sha256-ZYgw22RUFBr3J6mLBgwmsw7xrdpBZXgLQBWj0wIeHQU=";
   };
 
   pythonRelaxDeps = true;
