@@ -6,7 +6,7 @@
 }:
 python3Packages.buildPythonApplication rec {
   pname = "demisto-sdk";
-  version = "1.39.3";
+  version = "1.39.4";
   format = "wheel";
 
   src = fetchPypi {
