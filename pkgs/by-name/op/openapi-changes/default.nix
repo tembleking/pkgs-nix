@@ -6,13 +6,13 @@
 }:
 buildGoModule (finalAttrs: {
   pname = "openapi-changes";
-  version = "0.2.10";
+  version = "0.2.11";
 
   src = fetchFromGitHub {
     owner = "pb33f";
     repo = "openapi-changes";
     tag = "v${finalAttrs.version}";
-    hash = "sha256-Uo2gT9vJOaYmZpDMgMNPZwMgl0WhBpw4gC0YI48iRaQ=";
+    hash = "sha256-LiBTX/KM5XxK5+ViliHDIR2LDrO1eg5bExUoOnhc19w=";
   };
 
   vendorHash = "sha256-m+0/R7uvvHyKfzCOVa8I7LUPY2C6V8DDwVZ89EYGQG4=";
