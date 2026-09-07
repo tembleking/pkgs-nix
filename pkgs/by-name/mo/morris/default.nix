@@ -13,13 +13,13 @@
 }:
 stdenv.mkDerivation (finalAttrs: {
   pname = "morris";
-  version = "0.3";
+  version = "0.4";
 
   src = fetchFromGitHub {
     owner = "farindk";
     repo = "morris";
     tag = "v${finalAttrs.version}";
-    hash = "sha256-Ow6dWJOB3OHYL5JQoy1VpJaG9WlO2fNwPnX59+e1bM4=";
+    hash = "sha256-EFCYWO7rhdWRXJiRCBCnyMM/THVCoAV9SsqxHMM8bNc=";
   };
 
   nativeBuildInputs = [
